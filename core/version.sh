@@ -8,7 +8,7 @@ MARIADB_MANAGER_VERSION_LOADED=1
 # Print application name and version.
 # Returns: echoes "name version" to stdout.
 version_string() {
-  printf '%s %s\n' "${APP_NAME:-MariaDB Manager}" "${APP_VERSION:-0.0.0}"
+  printf '%s %s\n' "${APP_NAME:-MariaDB Manager}" "${APP_VERSION:-0.3.0}"
 }
 
 # Compatibility alias used by older call sites.
