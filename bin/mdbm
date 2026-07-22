@@ -1,0 +1,95 @@
+#!/usr/bin/env bash
+# bin/mdbm — MariaDB Manager executable entrypoint.
+# shellcheck shell=bash
+
+set -Eeuo pipefail
+
+MDBM_BIN_SELF="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+MM_ROOT="$(cd "${MDBM_BIN_SELF}/.." && pwd)"
+# shellcheck disable=SC1091
+source "${MM_ROOT}/core/bootstrap.sh"
+
+MDBM_ONCE=0
+MDBM_UI_OVERRIDE=""
+MDBM_SHOW_VERSION=0
+
+# Print CLI usage information.
+# Returns: 0
+mdbm_usage() {
+  cat <<EOF
+Usage: mdbm [OPTIONS]
+
+MariaDB Manager — production terminal MariaDB administration tool.
+
+Options:
+  -h, --help       Show this help and exit
+  -V, --version    Show version and exit
+  --once           Show main menu once and exit
+  --ui BACKEND     Force UI backend: auto|dialog|whiptail|plain
+
+EOF
+}
+
+# Parse command-line arguments into globals.
+# Args: $@ = CLI arguments
+# Returns: 0
+mdbm_parse_args() {
+  while (($# > 0)); do
+    case "$1" in
+      -h | --help) mdbm_usage; exit 0 ;;
+      -V | --version) MDBM_SHOW_VERSION=1; shift ;;
+      --once) MDBM_ONCE=1; shift ;;
+      --ui)
+        MDBM_UI_OVERRIDE="${2:?--ui requires a backend name}"
+        shift 2
+        ;;
+      *)
+        printf 'Unknown option: %s\n' "$1" >&2
+        mdbm_usage >&2
+        exit 2
+        ;;
+    esac
+  done
+}
+
+# Show version without full runtime bootstrap.
+# Returns: exits 0.
+mdbm_show_version() {
+  # shellcheck disable=SC1091
+  source "${MM_ROOT}/core/common.sh"
+  # shellcheck disable=SC1091
+  source "${MM_ROOT}/core/error.sh"
+  # shellcheck disable=SC1091
+  source "${MM_ROOT}/core/version.sh"
+  # shellcheck disable=SC1091
+  source "${MM_ROOT}/core/config.sh"
+  config_load
+  version_string
+  exit 0
+}
+
+# Apply CLI overrides after configuration is loaded.
+# Returns: 0
+mdbm_apply_overrides() {
+  if [[ -n "${MDBM_UI_OVERRIDE}" ]]; then
+    UI_PREFERRED="${MDBM_UI_OVERRIDE}"
+    ui_init
+  fi
+  dispatcher_set_once "${MDBM_ONCE}"
+}
+
+# Application main.
+# Args: $@ = CLI arguments
+# Returns: exit status.
+mdbm_main() {
+  mdbm_parse_args "$@"
+  if ((MDBM_SHOW_VERSION == 1)); then
+    mdbm_show_version
+  fi
+  bootstrap_init
+  mdbm_apply_overrides
+  trap bootstrap_shutdown EXIT
+  dispatcher_run
+}
+
+mdbm_main "$@"

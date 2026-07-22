@@ -1,0 +1,28 @@
+# Runtime
+logs/*
+!logs/.gitkeep
+tmp/*
+!tmp/.gitkeep
+backups/*
+!backups/.gitkeep
+
+# Local overrides
+config/config.local.conf
+*.local.conf
+
+# Editor / OS
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.code-workspace
+
+# Secrets
+*.pem
+*.key
+.env
+.env.*
+credentials.conf

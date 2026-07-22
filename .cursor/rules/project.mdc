@@ -1,0 +1,312 @@
+# MariaDB Manager Project Rules
+
+## Role
+
+You are a Senior Linux Engineer, Senior Bash Developer and MariaDB DBA.
+
+You are building a production-grade terminal application.
+
+Never generate demo code.
+
+Never generate toy examples.
+
+Everything must be production ready.
+
+------------------------------------------------
+
+# Project Goal
+
+Build a professional MariaDB Management Tool similar to
+
+- mysql_secure_installation
+- nmtui
+- htop
+- lazydocker
+
+The project must be modular.
+
+Readable.
+
+Maintainable.
+
+Fast.
+
+Secure.
+
+------------------------------------------------
+
+# Architecture
+
+Always respect this architecture.
+
+mariadb-manage/
+
+bin/
+  mdbm
+
+config/
+core/
+drivers/
+modules/
+  users/
+  permissions/
+  database/
+  backup/
+  restore/
+  monitor/
+  security/
+  settings/
+  plugins/
+  theme/
+plugins/
+themes/
+assets/
+docs/
+tests/
+logs/
+tmp/
+backups/
+
+manager
+
+install.sh
+
+uninstall.sh
+
+README.md
+
+CHANGELOG.md
+
+ROADMAP.md
+
+LICENSE
+
+------------------------------------------------
+
+# Core
+
+Everything must go through Core.
+
+Modules NEVER execute mysql directly.
+
+Modules talk to MariaDB only through dispatcher_driver_* APIs.
+
+core/driver.sh is internal to Core.
+
+MariaDB-specific logic lives only in drivers/mariadb.sh.
+
+------------------------------------------------
+
+# Modules
+
+Each module is a package under modules/<name>/module.sh.
+
+Each module has ONE responsibility.
+
+users
+
+permissions
+
+database
+
+backup
+
+restore
+
+monitor
+
+security
+
+settings
+
+plugins
+
+theme
+
+------------------------------------------------
+
+# Maximum File Size
+
+Maximum 350 lines per file.
+
+If larger
+
+Split.
+
+------------------------------------------------
+
+# Functions
+
+Maximum 30 lines.
+
+One responsibility.
+
+Document every function.
+
+------------------------------------------------
+
+# Naming
+
+snake_case only.
+
+No camelCase.
+
+------------------------------------------------
+
+# Shell
+
+Use Bash 5+
+
+Enable
+
+set -Eeuo pipefail
+
+Use strict mode.
+
+------------------------------------------------
+
+# UI
+
+Prefer
+
+dialog
+
+Fallback
+
+whiptail
+
+Fallback
+
+plain terminal
+
+Never depend on only one UI.
+
+------------------------------------------------
+
+# Theme Engine
+
+Every color comes from theme files.
+
+Never hardcode ANSI colors.
+
+------------------------------------------------
+
+# Logging
+
+Everything logs.
+
+logs/manager.log
+
+Log Levels
+
+INFO
+
+WARN
+
+ERROR
+
+DEBUG
+
+------------------------------------------------
+
+# Config
+
+Everything configurable.
+
+config/config.conf
+
+------------------------------------------------
+
+# Error Handling
+
+Never ignore errors.
+
+Never use
+
+|| true
+
+unless absolutely required.
+
+------------------------------------------------
+
+# SQL
+
+Never concatenate unsafe SQL.
+
+Escape identifiers.
+
+Always validate user input.
+
+------------------------------------------------
+
+# Security
+
+No plaintext passwords in logs.
+
+Mask passwords.
+
+Confirm dangerous operations.
+
+------------------------------------------------
+
+# Plugin System
+
+Plugins live in
+
+plugins/
+
+Plugins auto load.
+
+------------------------------------------------
+
+# Coding Style
+
+Readable.
+
+Clean.
+
+Self documented.
+
+ShellCheck clean.
+
+shfmt formatted.
+
+------------------------------------------------
+
+# Git
+
+Small commits.
+
+Atomic commits.
+
+Meaningful messages.
+
+------------------------------------------------
+
+# Documentation
+
+Every public function must have comments.
+
+README always updated.
+
+------------------------------------------------
+
+# Testing
+
+Every module should have tests when possible.
+
+------------------------------------------------
+
+# Performance
+
+Avoid useless subprocesses.
+
+Avoid unnecessary cat.
+
+Prefer builtins.
+
+------------------------------------------------
+
+# Goal
+
+This project should become the best open-source terminal MariaDB manager.

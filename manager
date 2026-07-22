@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+# manager — compatibility shim; prefer bin/mdbm.
+# shellcheck shell=bash
+
+set -Eeuo pipefail
+
+MANAGER_SELF="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+exec "${MANAGER_SELF}/bin/mdbm" "$@"
